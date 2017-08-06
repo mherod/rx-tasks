@@ -6,6 +6,7 @@ buildscript {
 
   dependencies {
     classpath "com.android.tools.build:gradle:$versions.android.tools"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
     classpath "com.google.gms:google-services:$versions.google.services"
 
     classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
@@ -14,6 +15,8 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
 apply plugin: 'bintray-release'
 apply plugin: 'jacoco-android'
 
@@ -28,15 +31,21 @@ android {
     versionCode configuration.versionCode
     versionName configuration.versionName
   }
+
+  sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+    test.java.srcDirs += 'src/test/kotlin'
+  }
 }
 
 dependencies {
-  api libraries.google.play.tasks
-  api libraries.rx.java
+  implementation libraries.google.play.tasks
+  implementation libraries.rx.java
+  implementation libraries.kotlin
 
-  testApi libraries.jUnit
-  testApi libraries.truth
-  testApi libraries.mockito
+  testImplementation libraries.jUnit
+  testImplementation libraries.truth
+  testImplementation libraries.mockito
 }
 
 publish {
@@ -47,4 +56,7 @@ publish {
   version = configuration.versionName
   description = 'Simple and lightweight RxJava2 wrapper for the GMS Tasks API'
   website = 'https://github.com/ashdavies/rx-tasks'
+}
+repositories {
+  mavenCentral()
 }
